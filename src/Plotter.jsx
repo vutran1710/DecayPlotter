@@ -71,6 +71,11 @@ export default class Plotter extends Component {
               beginAtZero:true
             }
           }],
+          xAxes: [{
+            ticks: {
+              callback: (value, index, values) => numeral(value).format('0,0')
+            }
+          }],
         }
       }
     })
@@ -141,19 +146,32 @@ export default class Plotter extends Component {
                     Input values
                   </CardTitle>
                   <Form>
-                    <FormGroup>
-                      <Label htmlFor="origin">Origin value (N0)</Label>
-                      <Input type="number" name="origin" value={origin} onInput={this.modifyConfig('origin')} />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label htmlFor="elapsed">Elapsed (t)</Label>
-                      <Input type="number" name="elapsed" value={elapsed} onInput={this.modifyConfig('elapsed')} step="10" min="0" />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label htmlFor="half_decay">Decay-Constant (t)</Label>
-                      <Input type="number" name="half_decay" value={decay_constant} onInput={this.modifyConfig(' decay_constant')} />
-                    </FormGroup>
+                    <Container>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <Label htmlFor="origin">Origin value (N0)</Label>
+                            <Input type="number" name="origin" value={origin} onInput={this.modifyConfig('origin')} />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <Label htmlFor="elapsed">Elapsed (t)</Label>
+                            <Input type="number" name="elapsed" value={elapsed} onInput={this.modifyConfig('elapsed')} step={decay_constant/10} min="0" />
+                          </FormGroup>
+                        </Col>
+                        <Col>
+                          <FormGroup>
+                            <Label htmlFor="half_decay">Decay-Constant (t)</Label>
+                            <Input type="number" name="half_decay" value={decay_constant} onInput={this.modifyConfig(' decay_constant')} />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </Container>
                   </Form>
+                  <hr />
                   <Button onClick={this.resetState}>Reset!</Button>
                 </CardBody>
               </Card>

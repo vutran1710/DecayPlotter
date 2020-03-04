@@ -21,7 +21,7 @@ import Header from './components/Header'
 const ORIGINAL_STATE = {
   origin: 1000,
   elapsed: 0,
-  decay_constant: 3600,
+  decay_constant: 60,
 }
 
 
@@ -123,9 +123,8 @@ export default class Plotter extends Component {
             <Col>
               <Card>
                 <CardBody className="bg-basic">
-                  <CardTitle>Nt Result</CardTitle>
+                  <CardTitle>Result (Nt) <span className="alert-result">{result}</span></CardTitle>
                   <CardText>
-                    <h4>{result}</h4>
                     <Container>
                       <Row style={{ padding: 10 }}>
                         <canvas id="base" />
@@ -148,7 +147,7 @@ export default class Plotter extends Component {
                     </FormGroup>
                     <FormGroup>
                       <Label htmlFor="elapsed">Elapsed (t)</Label>
-                      <Input type="number" name="elapsed" value={elapsed} onInput={this.modifyConfig('elapsed')} step="500" min="0" />
+                      <Input type="number" name="elapsed" value={elapsed} onInput={this.modifyConfig('elapsed')} step="10" min="0" />
                     </FormGroup>
                     <FormGroup>
                       <Label htmlFor="half_decay">Decay-Constant (t)</Label>

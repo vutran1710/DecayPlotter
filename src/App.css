@@ -50,3 +50,7 @@
 .bg-basic {
   background: #f7f7f7;
 }
+
+.alert-result {
+  color: red;
+}

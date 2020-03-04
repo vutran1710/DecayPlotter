@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "inferno": "^7.4.2",
+    "inferno-bootstrap": "^7.3.0",
     "inferno-scripts": "7.0.4"
   },
   "scripts": {

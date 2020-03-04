@@ -1,5 +1,6 @@
 import { Component } from 'inferno'
 import numeral from 'numeral'
+import Chart from 'chart.js'
 import * as F from './Functions'
 import {
   Input,
@@ -13,15 +14,92 @@ import {
   Form,
   FormGroup,
   Label,
+  Button,
 } from 'inferno-bootstrap'
 import Header from './components/Header'
 
+const ORIGINAL_STATE = {
+  origin: 1000,
+  elapsed: 0,
+  decay_constant: 3600,
+}
+
 
 export default class Plotter extends Component {
-  state = {
-    origin: 1000,
-    elapsed: 0,
-    decay_constant: 3600,
+  CHART = undefined
+
+  state = {...ORIGINAL_STATE}
+
+  componentDidMount() {
+    const ctx = document.getElementById("base");
+    const data = {
+      labels: this.updateLabels(this.state.decay_constant),
+      datasets: [
+        {
+          label: "f(x) = x",
+          function: x => F.decay(this.state.origin, x, this.state.decay_constant),
+          borderColor: "rgba(75, 192, 192, 1)",
+          data: [],
+          fill: false
+        },
+      ]
+    }
+
+    Chart.pluginService.register({
+      beforeInit: function(chart) {
+        const data = chart.config.data;
+        for (let i = 0; i < data.datasets.length; i++) {
+          for (let j = 0; j < data.labels.length; j++) {
+            const fct = data.datasets[i].function
+            const x = data.labels[j]
+            const y = fct(x)
+            data.datasets[i].data.push(y);
+          }
+        }
+      }
+    })
+
+    this.CHART = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        animation: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              maxTicksLimit: 10,
+              beginAtZero:true
+            }
+          }],
+        }
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      elapsed,
+      decay_constant,
+    } = this.state
+    if (elapsed > decay_constant) {
+      const labels = this.updateLabels(elapsed)
+      this.updateChart(labels)
+    }
+  }
+
+  updateChart = labels => {
+    if (!this.CHART) return undefined
+    this.CHART.config.data.labels = labels
+    this.CHART.config.data.datasets[0].data = labels.map((x, idx) => F.decay(this.state.origin, x, this.state.decay_constant))
+    this.CHART.update()
+  }
+
+  updateLabels = range => Array.from({ length: 11 }).fill(undefined).map((_, idx) => (range / 10) * idx)
+
+  resetState = () => {
+    this.setState(ORIGINAL_STATE)
+    const orignalLabels = this.updateLabels(ORIGINAL_STATE.decay_constant)
+    this.updateChart(orignalLabels)
   }
 
   changeElapsed = e => this.setState({ elapsed: e.target.value })
@@ -48,6 +126,11 @@ export default class Plotter extends Component {
                   <CardTitle>Nt Result</CardTitle>
                   <CardText>
                     <h4>{result}</h4>
+                    <Container>
+                      <Row style={{ padding: 10 }}>
+                        <canvas id="base" />
+                      </Row>
+                    </Container>
                   </CardText>
                 </CardBody>
               </Card>
@@ -65,13 +148,14 @@ export default class Plotter extends Component {
                     </FormGroup>
                     <FormGroup>
                       <Label htmlFor="elapsed">Elapsed (t)</Label>
-                      <Input type="number" name="elapsed" value={elapsed} onInput={this.modifyConfig('elapsed')} />
+                      <Input type="number" name="elapsed" value={elapsed} onInput={this.modifyConfig('elapsed')} step="500" min="0" />
                     </FormGroup>
                     <FormGroup>
                       <Label htmlFor="half_decay">Decay-Constant (t)</Label>
                       <Input type="number" name="half_decay" value={decay_constant} onInput={this.modifyConfig(' decay_constant')} />
                     </FormGroup>
                   </Form>
+                  <Button onClick={this.resetState}>Reset!</Button>
                 </CardBody>
               </Card>
             </Col>

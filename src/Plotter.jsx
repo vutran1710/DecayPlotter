@@ -27,8 +27,12 @@ const ORIGINAL_STATE = {
 
 export default class Plotter extends Component {
   CHART = undefined
+  draw = undefined
 
-  state = {...ORIGINAL_STATE}
+  state = {
+    ...ORIGINAL_STATE,
+    disableInput: false,
+  }
 
   componentDidMount() {
     const ctx = document.getElementById("base");
@@ -73,7 +77,7 @@ export default class Plotter extends Component {
           }],
           xAxes: [{
             ticks: {
-              callback: (value, index, values) => numeral(value).format('0,0')
+              callback: (value, index, values) => numeral(value).format('0')
             }
           }],
         }
@@ -111,14 +115,34 @@ export default class Plotter extends Component {
 
   modifyConfig = key => event => this.setState({ [key]: event.target.value })
 
+  animate = () => {
+    if (this.state.elapsed < this.state.decay_constant) return undefined
+    this.setState({ disableInput: true })
+    const currentElapsed = this.state.elapsed
+    let starter = this.state.decay_constant
+    const inc = (currentElapsed - starter) / 500
+    this.draw = setInterval(() => {
+      if (starter > currentElapsed) {
+        window.clearInterval(this.draw)
+        this.setState({ disableInput: false })
+        this.draw = undefined
+        return;
+      }
+      this.setState({ elapsed: starter }, () => {
+        starter += inc
+      })
+    }, 20)
+  }
+
   render() {
     const {
       origin,
       elapsed,
-       decay_constant,
+      decay_constant,
+      disableInput,
     } = this.state
 
-    const result = numeral(F.decay(origin, elapsed,  decay_constant)).format('0,0.000')
+    const result = numeral(F.decay(origin, elapsed,  decay_constant)).format('0,0.0')
 
     return (
       <div>
@@ -151,7 +175,13 @@ export default class Plotter extends Component {
                         <Col>
                           <FormGroup>
                             <Label htmlFor="origin">Origin value (N0)</Label>
-                            <Input type="number" name="origin" value={origin} onInput={this.modifyConfig('origin')} />
+                            <Input
+                              type="number"
+                              name="origin"
+                              value={origin}
+                              onInput={this.modifyConfig('origin')}
+                              disabled={disableInput}
+                            />
                           </FormGroup>
                         </Col>
                       </Row>
@@ -159,20 +189,53 @@ export default class Plotter extends Component {
                         <Col>
                           <FormGroup>
                             <Label htmlFor="elapsed">Elapsed (t)</Label>
-                            <Input type="number" name="elapsed" value={elapsed} onInput={this.modifyConfig('elapsed')} step={decay_constant/10} min="0" />
+                            <Input
+                              type="number"
+                              name="elapsed"
+                              value={elapsed}
+                              onInput={this.modifyConfig('elapsed')}
+                              step={decay_constant/10}
+                              min="0"
+                              disabled={disableInput}
+                            />
                           </FormGroup>
                         </Col>
                         <Col>
                           <FormGroup>
                             <Label htmlFor="half_decay">Decay-Constant (t)</Label>
-                            <Input type="number" name="half_decay" value={decay_constant} onInput={this.modifyConfig(' decay_constant')} />
+                            <Input
+                              type="number"
+                              name="half_decay"
+                              value={decay_constant}
+                              onInput={this.modifyConfig(' decay_constant')}
+                              disabled={disableInput}
+                            />
                           </FormGroup>
                         </Col>
                       </Row>
                     </Container>
                   </Form>
                   <hr />
-                  <Button onClick={this.resetState}>Reset!</Button>
+                  <Row>
+                    <Col>
+                      <Button
+                        onClick={this.resetState}
+                        disabled={disableInput}
+                      >
+                        Reset!
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        primary
+                        onClick={this.animate}
+                        color="primary"
+                        disabled={disableInput}
+                      >
+                        Animate
+                      </Button>
+                    </Col>
+                  </Row>
                 </CardBody>
               </Card>
             </Col>

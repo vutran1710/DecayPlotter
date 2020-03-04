@@ -19,7 +19,7 @@ import {
 import Header from './components/Header'
 
 const ORIGINAL_STATE = {
-  origin: 1000,
+  origin: 10000,
   elapsed: 0,
   decay_constant: 60,
 }
@@ -87,10 +87,11 @@ export default class Plotter extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const {
+      origin,
       elapsed,
       decay_constant,
     } = this.state
-    if (elapsed > decay_constant) {
+    if (elapsed > decay_constant || prevState.origin !== origin || prevState.decay_constant !== decay_constant) {
       const labels = this.updateLabels(elapsed)
       this.updateChart(labels)
     }
@@ -116,11 +117,11 @@ export default class Plotter extends Component {
   modifyConfig = key => event => this.setState({ [key]: event.target.value })
 
   animate = () => {
-    if (this.state.elapsed < this.state.decay_constant) return undefined
+    if (this.state.elapsed < 1.5*this.state.decay_constant) return undefined
     this.setState({ disableInput: true })
     const currentElapsed = this.state.elapsed
     let starter = this.state.decay_constant
-    const inc = (currentElapsed - starter) / 500
+    const inc = Math.ceil((currentElapsed - starter) / 400)
     this.draw = setInterval(() => {
       if (starter > currentElapsed) {
         window.clearInterval(this.draw)
@@ -156,7 +157,7 @@ export default class Plotter extends Component {
                   <CardText>
                     <Container>
                       <Row style={{ padding: 10 }}>
-                        <canvas id="base" />
+                        <canvas id="base" height="200" />
                       </Row>
                     </Container>
                   </CardText>
@@ -207,7 +208,7 @@ export default class Plotter extends Component {
                               type="number"
                               name="half_decay"
                               value={decay_constant}
-                              onInput={this.modifyConfig(' decay_constant')}
+                              onInput={this.modifyConfig('decay_constant')}
                               disabled={disableInput}
                             />
                           </FormGroup>
@@ -229,8 +230,9 @@ export default class Plotter extends Component {
                       <Button
                         primary
                         onClick={this.animate}
-                        color="primary"
-                        disabled={disableInput}
+                        color="link"
+                        disabled={disableInput || elapsed < 1.5 * decay_constant}
+                        link={disableInput || elapsed < 1.5 * decay_constant}
                       >
                         Animate
                       </Button>

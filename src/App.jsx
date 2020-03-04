@@ -1,6 +1,6 @@
-import { version, Component } from 'inferno'
-import Logo from './logo'
+import { Component } from 'inferno'
 import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import Plotter from './Plotter'
 

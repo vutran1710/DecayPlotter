@@ -38,3 +38,15 @@
     transform: rotate(360deg);
   }
 }
+
+.text-center {
+  text-align: center;
+}
+
+.block {
+  display: block;
+}
+
+.bg-basic {
+  background: #f7f7f7;
+}

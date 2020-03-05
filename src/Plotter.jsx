@@ -135,6 +135,11 @@ export default class Plotter extends Component {
     }, 20)
   }
 
+  cancelAnimation = () => {
+    window.clearInterval(this.draw)
+    this.setState({ disableInput: false })
+  }
+
   render() {
     const {
       origin,
@@ -235,6 +240,15 @@ export default class Plotter extends Component {
                         link={disableInput || elapsed < 1.5 * decay_constant}
                       >
                         Animate
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        primary
+                        onClick={this.cancelAnimation}
+                        color="danger"
+                      >
+                        Cancel
                       </Button>
                     </Col>
                   </Row>

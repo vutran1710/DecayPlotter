@@ -7,3 +7,7 @@ export const decay = (origin, time, half_time) => {
   let rem = origin * Math.pow(Math.E, powerlevel)
   return rem;
 }
+
+export const score_calc = (origin, r, t, half_time) => {
+  return origin + decay(r, t, half_time / 2)
+}

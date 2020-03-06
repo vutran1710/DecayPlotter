@@ -21,7 +21,7 @@ import Header from './components/Header'
 const ORIGINAL_STATE = {
   origin: 10000,
   elapsed: 0,
-  decay_constant: 60,
+  steep: 1.001,
 }
 
 
@@ -32,16 +32,17 @@ export default class Plotter extends Component {
   state = {
     ...ORIGINAL_STATE,
     disableInput: false,
+    values: [],
   }
 
   componentDidMount() {
     const ctx = document.getElementById("base");
     const data = {
-      labels: this.updateLabels(this.state.decay_constant),
+      labels: this.updateLabels(this.state.steep),
       datasets: [
         {
           label: "f(x) = x",
-          function: x => F.decay(this.state.origin, x, this.state.decay_constant),
+          function: x => F.decay(this.state.origin, x, this.state.steep),
           borderColor: "rgba(75, 192, 192, 1)",
           data: [],
           fill: false
@@ -89,9 +90,9 @@ export default class Plotter extends Component {
     const {
       origin,
       elapsed,
-      decay_constant,
+      steep,
     } = this.state
-    if (elapsed > decay_constant || prevState.origin !== origin || prevState.decay_constant !== decay_constant) {
+    if (elapsed > steep || prevState.origin !== origin || prevState.steep !== steep) {
       const labels = this.updateLabels(elapsed)
       this.updateChart(labels)
     }
@@ -100,7 +101,7 @@ export default class Plotter extends Component {
   updateChart = labels => {
     if (!this.CHART) return undefined
     this.CHART.config.data.labels = labels
-    this.CHART.config.data.datasets[0].data = labels.map((x, idx) => F.decay(this.state.origin, x, this.state.decay_constant))
+    this.CHART.config.data.datasets[0].data = labels.map((x, idx) => F.decay(this.state.origin, x, this.state.steep))
     this.CHART.update()
   }
 
@@ -108,7 +109,7 @@ export default class Plotter extends Component {
 
   resetState = () => {
     this.setState(ORIGINAL_STATE)
-    const orignalLabels = this.updateLabels(ORIGINAL_STATE.decay_constant)
+    const orignalLabels = this.updateLabels(ORIGINAL_STATE.steep)
     this.updateChart(orignalLabels)
   }
 
@@ -117,10 +118,10 @@ export default class Plotter extends Component {
   modifyConfig = key => event => this.setState({ [key]: event.target.value })
 
   animate = () => {
-    if (this.state.elapsed < 1.5*this.state.decay_constant) return undefined
+    if (this.state.elapsed < 1.5*this.state.steep) return undefined
     this.setState({ disableInput: true })
     const currentElapsed = this.state.elapsed
-    let starter = this.state.decay_constant
+    let starter = this.state.steep
     const inc = Math.ceil((currentElapsed - starter) / 400)
     this.draw = setInterval(() => {
       if (starter > currentElapsed) {
@@ -144,11 +145,11 @@ export default class Plotter extends Component {
     const {
       origin,
       elapsed,
-      decay_constant,
+      steep,
       disableInput,
     } = this.state
 
-    const result = numeral(F.decay(origin, elapsed,  decay_constant)).format('0,0.0')
+    const result = numeral(F.decay(origin, elapsed,  steep)).format('0,0.0')
 
     return (
       <div>
@@ -200,7 +201,7 @@ export default class Plotter extends Component {
                               name="elapsed"
                               value={elapsed}
                               onInput={this.modifyConfig('elapsed')}
-                              step={decay_constant/10}
+                              step={steep/10}
                               min="0"
                               disabled={disableInput}
                             />
@@ -212,8 +213,8 @@ export default class Plotter extends Component {
                             <Input
                               type="number"
                               name="half_decay"
-                              value={decay_constant}
-                              onInput={this.modifyConfig('decay_constant')}
+                              value={steep}
+                              onInput={this.modifyConfig('steep')}
                               disabled={disableInput}
                             />
                           </FormGroup>
@@ -236,8 +237,8 @@ export default class Plotter extends Component {
                         primary
                         onClick={this.animate}
                         color="link"
-                        disabled={disableInput || elapsed < 1.5 * decay_constant}
-                        link={disableInput || elapsed < 1.5 * decay_constant}
+                        disabled={disableInput || elapsed < 1.5 * steep}
+                        link={disableInput || elapsed < 1.5 * steep}
                       >
                         Animate
                       </Button>

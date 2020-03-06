@@ -38,11 +38,10 @@ export default class Plotter extends Component {
   componentDidMount() {
     const ctx = document.getElementById("base");
     const data = {
-      labels: this.updateLabels(this.state.steep),
+      labels: [],
       datasets: [
         {
           label: "f(x) = x",
-          function: x => F.decay(this.state.origin, x, this.state.steep),
           borderColor: "rgba(75, 192, 192, 1)",
           data: [],
           fill: false
@@ -50,19 +49,19 @@ export default class Plotter extends Component {
       ]
     }
 
-    Chart.pluginService.register({
-      beforeInit: function(chart) {
-        const data = chart.config.data;
-        for (let i = 0; i < data.datasets.length; i++) {
-          for (let j = 0; j < data.labels.length; j++) {
-            const fct = data.datasets[i].function
-            const x = data.labels[j]
-            const y = fct(x)
-            data.datasets[i].data.push(y);
-          }
-        }
-      }
-    })
+    /* Chart.pluginService.register({
+     *   beforeInit: function(chart) {
+     *     const data = chart.config.data;
+     *     for (let i = 0; i < data.datasets.length; i++) {
+     *       for (let j = 0; j < data.labels.length; j++) {
+     *         const fct = data.datasets[i].function
+     *         const x = data.labels[j]
+     *         const y = fct(x)
+     *         data.datasets[i].data.push(y);
+     *       }
+     *     }
+     *   }
+     * }) */
 
     this.CHART = new Chart(ctx, {
       type: 'line',
@@ -88,20 +87,26 @@ export default class Plotter extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      origin,
-      elapsed,
-      steep,
+      values
     } = this.state
-    if (elapsed > steep || prevState.origin !== origin || prevState.steep !== steep) {
-      const labels = this.updateLabels(elapsed)
-      this.updateChart(labels)
+    /*     const labels = this.updateLabels(elapsed) */
+    if (prevState.steep !== this.state.steep) {
+      this.CHART.config.data.labels = []
+      this.CHART.config.data.datasets[0].data = []
+      this.updateChart([])
+      this.setState({ values: [] })
+    } else {
+      this.updateChart(values)
     }
   }
 
-  updateChart = labels => {
-    if (!this.CHART) return undefined
-    this.CHART.config.data.labels = labels
-    this.CHART.config.data.datasets[0].data = labels.map((x, idx) => F.decay(this.state.origin, x, this.state.steep))
+  updateChart = values => {
+    const currentLength = this.CHART.config.data.labels.length
+    if (values.length === 0) return
+    values.slice(currentLength).forEach(item => {
+      this.CHART.config.data.labels.push(item.x)
+      this.CHART.config.data.datasets[0].data.push(item.y)
+    })
     this.CHART.update()
   }
 
@@ -118,21 +123,24 @@ export default class Plotter extends Component {
   modifyConfig = key => event => this.setState({ [key]: event.target.value })
 
   animate = () => {
-    if (this.state.elapsed < 1.5*this.state.steep) return undefined
     this.setState({ disableInput: true })
-    const currentElapsed = this.state.elapsed
-    let starter = this.state.steep
-    const inc = Math.ceil((currentElapsed - starter) / 400)
     this.draw = setInterval(() => {
-      if (starter > currentElapsed) {
+      const {
+        values: stateValues,
+        elapsed
+      } = this.state
+      const x = stateValues.length > 0 ? stateValues[this.state.values.length - 1].x + 1 : 1
+
+      if (x > elapsed) {
         window.clearInterval(this.draw)
-        this.setState({ disableInput: false })
         this.draw = undefined
         return;
       }
-      this.setState({ elapsed: starter }, () => {
-        starter += inc
-      })
+
+      console.log('x =', x)
+      const y = F.decay(this.state.origin, x, this.state.steep)
+      const values = [...this.state.values, { x, y }]
+      this.setState({ values })
     }, 20)
   }
 

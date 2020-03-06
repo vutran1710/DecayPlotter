@@ -11,3 +11,13 @@ export const decay = (origin, time, half_time) => {
 export const score_calc = (origin, r, t, half_time) => {
   return origin + decay(r, t, half_time / 2)
 }
+
+
+export const S1T = (origin, t, half_time) => origin * Math.pow(1/half_time, t)
+
+export const S2T = (upperBound, x, Breakpoint, steepness = 1.05) => {
+  // https://towardsdatascience.com/transforming-skewed-data-73da4c2d0d16
+  // if (x === 0) return 0
+  const base = 1 + Math.pow(steepness, -(x - Breakpoint))
+  return upperBound / base
+}

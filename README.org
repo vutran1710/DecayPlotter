@@ -8,6 +8,7 @@
 - [[#introduction][Introduction]]
 - [[#screenshot][Screenshot]]
 - [[#installing--running][Installing & Running]]
+- [[#available-formulas][Available Formulas]]
 
 * Introduction
 This app is a visual-demostration of different Ranking Algorimths based on Medium/Reddit's popular ranking
@@ -28,3 +29,7 @@ $ npm install
 #+begin_src shell
 $ npm start
 #+end_src
+
+* Available Formulas
+#+ATTR_HTML: :style margin-left: auto; margin-right: auto; :width 700
+[[./img/formulas.png]]

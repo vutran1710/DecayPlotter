@@ -2,10 +2,7 @@ import { Component } from 'inferno'
 import numeral from 'numeral'
 import Chart from 'apexcharts'
 import * as F from '../Functions'
-import {
-  Row,
-  Col,
-} from 'inferno-bootstrap'
+import { Row, Col } from 'inferno-bootstrap'
 import Header from './Header'
 import RankingBoard from './RankingBoard'
 import ControlBoard from './ControlBoard'

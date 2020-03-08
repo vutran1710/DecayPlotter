@@ -81,9 +81,9 @@ export default class ControlBoard extends Component {
           <Row>
             <Col>
               <ButtonGroup vertical>
-                <Button size="lg" color="link" onClick={reset} disabled={disabled}>Reset</Button>
+                <Button size="lg" color="link" onClick={reset} disabled={true}>Reset</Button>
                 <Button size="lg" color="link" onClick={formActions.animate}>Animate</Button>
-                <Button size="lg" primary onClick={formActions.stopAnimate} color="link">Cancel</Button>
+                <Button size="lg" primary onClick={formActions.stopAnimate} color="link">Pause Animation</Button>
                 <Button size="lg" primary onClick={formActions.addItem} color="link">Add Item</Button>
               </ButtonGroup>
             </Col>

@@ -1,12 +1,12 @@
 import { Component } from 'inferno'
 import numeral from 'numeral'
 import Chart from 'chart.js'
-import * as F from './Functions'
+import * as F from '../Functions'
 import {
   Row,
   Col,
 } from 'inferno-bootstrap'
-import Header from './components/Header'
+import Header from './Header'
 import RankingBoard from './RankingBoard'
 import ControlBoard from './ControlBoard'
 import Canvas from './Canvas'

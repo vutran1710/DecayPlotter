@@ -2,7 +2,7 @@ import { Component } from 'inferno'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import Plotter from './Plotter'
+import Plotter from './components/Plotter'
 
 
 class App extends Component {

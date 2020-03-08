@@ -6,15 +6,25 @@
 
 * Content                                                               :TOC:
 - [[#introduction][Introduction]]
-- [[#first][First]]
+- [[#screenshot][Screenshot]]
+- [[#installing--running][Installing & Running]]
 
 * Introduction
 This app is a visual-demostration of different Ranking Algorimths based on Medium/Reddit's popular ranking
 algorimths. Entities are ranked using different formula(s) defined in `src/Function/index.js`
 
-* First
-For configuration of the Chart and algorimths, refer to `state` of `Plotter.jsx` component
+* Screenshot
 
-<p align="center">
-  <img src="/img/ss.png" width="700" style="margin-right:10px;border:solid 2px #ddd;padding:5px;"/>
-</p>
+#+ATTR_HTML: :style margin-left: auto; margin-right: auto; :width 700
+[[./img/ss.png]]
+
+* Installing & Running
+#+begin_src shell
+$ npm install
+#+end_src
+
+- For configuration of the Chart and algorimths, refer to `state` of `Plotter.jsx` component
+
+#+begin_src shell
+$ npm start
+#+end_src

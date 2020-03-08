@@ -21,3 +21,7 @@ export const S2T = (upperBound, x, Breakpoint, steepness = 1.05) => {
   const base = 1 + Math.pow(steepness, Breakpoint - x)
   return upperBound / base
 }
+
+export const expected_R = (R, t, deltaT, blockLength) => {
+  const blockCount = Math.ceil(deltaT / blockLength)
+}

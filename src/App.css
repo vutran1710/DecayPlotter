@@ -54,3 +54,31 @@
 .alert-result {
   color: red;
 }
+
+.p1 {
+  padding: 10px;
+}
+
+.p2 {
+  padding: 20px;
+}
+
+.pt1 {
+  padding-top: 10px;
+}
+
+.pb1 {
+  padding-bottom: 10px;
+}
+
+.mb1 {
+  margin-bottom: 10px;
+}
+
+.mb2 {
+  margin-bottom: 20px;
+}
+
+.white {
+  color: white;
+}

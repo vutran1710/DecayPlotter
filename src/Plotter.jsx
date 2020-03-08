@@ -3,7 +3,6 @@ import numeral from 'numeral'
 import Chart from 'chart.js'
 import * as F from './Functions'
 import {
-  Input,
   Card,
   CardBody,
   CardText,
@@ -11,17 +10,15 @@ import {
   Container,
   Row,
   Col,
-  Form,
-  FormGroup,
-  Label,
-  Button,
 } from 'inferno-bootstrap'
 import Header from './components/Header'
+import RankingBoard from './RankingBoard'
+import ControlBoard from './ControlBoard'
 
 const ORIGINAL_STATE = {
-  origin: 10000,
-  elapsed: 0,
-  steep: 1.001,
+  S0: 10000,
+  x: 0,
+  D: 1.001,
 }
 
 
@@ -31,8 +28,9 @@ export default class Plotter extends Component {
 
   state = {
     ...ORIGINAL_STATE,
-    disableInput: false,
+    disabled: false,
     values: [],
+    items: [],
   }
 
   componentDidMount() {
@@ -73,123 +71,74 @@ export default class Plotter extends Component {
 
   modifyConfig = key => event => this.setState({ [key]: event.target.value })
 
+  addItem = () => {
+    const items = this.state.items
+    items.push({
+      x: this.state.x,
+      y: this.state.S0,
+      r: 0
+    })
+    this.setState({ items })
+  }
+
+  animate = () => {
+    this.draw = setInterval(() => {
+      const x = this.state.x + 1
+      this.setState({ x })
+    }, 200)
+  }
+
+  stopAnimate = () => {
+    window.clearInterval(this.draw)
+    this.draw = undefined
+  }
+
   render() {
     const {
-      origin,
-      elapsed,
-      steep,
-      disableInput,
+      x,
+      D,
+      S0,
+      disabled,
+      items,
     } = this.state
 
-    const result = numeral(F.S1T(origin, elapsed,  steep)).format('0,0.0')
+    const {
+      modifyConfig,
+      reset,
+      animate,
+      stopAnimate,
+      addItem,
+    } = this
 
     return (
       <div>
         <Header />
-        <Container>
-          <Row>
-            <Col>
-              <Card>
-                <CardBody className="bg-basic">
-                  <CardTitle>Result (Nt) <span className="alert-result">{result}</span></CardTitle>
-                  <CardText>
-                    <Container>
-                      <Row style={{ padding: 10 }}>
-                        <canvas id="base" height="200" />
-                      </Row>
-                    </Container>
-                  </CardText>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col>
-              <Card>
-                <CardBody className="bg-basic">
-                  <CardTitle>
-                    Input values
-                  </CardTitle>
-                  <Form>
-                    <Container>
-                      <Row>
-                        <Col>
-                          <FormGroup>
-                            <Label htmlFor="origin">Origin value (N0)</Label>
-                            <Input
-                              type="number"
-                              name="origin"
-                              value={origin}
-                              onInput={this.modifyConfig('origin')}
-                              disabled={disableInput}
-                            />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <FormGroup>
-                            <Label htmlFor="elapsed">Elapsed (t)</Label>
-                            <Input
-                              type="number"
-                              name="elapsed"
-                              value={elapsed}
-                              onInput={this.modifyConfig('elapsed')}
-                              step={steep/10}
-                              min="0"
-                              disabled={disableInput}
-                            />
-                          </FormGroup>
-                        </Col>
-                        <Col>
-                          <FormGroup>
-                            <Label htmlFor="half_decay">Decay-Constant (t)</Label>
-                            <Input
-                              type="number"
-                              name="half_decay"
-                              value={steep}
-                              onInput={this.modifyConfig('steep')}
-                              disabled={disableInput}
-                            />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                    </Container>
-                  </Form>
-                  <hr />
-                  <Row>
-                    <Col>
-                      <Button
-                        onClick={this.resetState}
-                        disabled={disableInput}
-                      >
-                        Reset!
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        primary
-                        onClick={this.animate}
-                        color="link"
-                        disabled={disableInput || elapsed < 1.5 * steep}
-                        link={disableInput || elapsed < 1.5 * steep}
-                      >
-                        Animate
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        primary
-                        onClick={this.cancelAnimation}
-                        color="danger"
-                      >
-                        Cancel
-                      </Button>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+        <Row>
+          <Col>
+            <Card>
+              <CardBody className="bg-basic">
+                <CardTitle>Real time charts</CardTitle>
+                <CardText>
+                  <Container>
+                    <Row style={{ padding: 10 }}>
+                      <canvas id="base" height="200" />
+                    </Row>
+                  </Container>
+                </CardText>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col>
+            <ControlBoard
+              disabled={disabled}
+              formValues={{x, D, S0}}
+              formActions={{ modifyConfig, reset, animate, stopAnimate, addItem }}
+            />
+          </Col>
+          <Col>
+            <RankingBoard items={items} />
+          </Col>
+        </Row>
       </div>
     )
   }

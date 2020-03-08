@@ -28,7 +28,7 @@ export default class RankingBoard extends Component {
       return (
         <div>
           <Card>
-            <CardBody>
+            <CardBody className="bg-basic">
               <CardTitle>Empty</CardTitle>
               <CardText>Run and add some items to see changes</CardText>
             </CardBody>

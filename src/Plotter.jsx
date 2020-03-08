@@ -3,17 +3,13 @@ import numeral from 'numeral'
 import Chart from 'chart.js'
 import * as F from './Functions'
 import {
-  Card,
-  CardBody,
-  CardText,
-  CardTitle,
-  Container,
   Row,
   Col,
 } from 'inferno-bootstrap'
 import Header from './components/Header'
 import RankingBoard from './RankingBoard'
 import ControlBoard from './ControlBoard'
+import Canvas from './Canvas'
 
 const ORIGINAL_STATE = {
   S0: 10000,
@@ -124,18 +120,7 @@ export default class Plotter extends Component {
         <Header />
         <Row>
           <Col>
-            <Card>
-              <CardBody className="bg-basic">
-                <CardTitle>Real time charts</CardTitle>
-                <CardText>
-                  <Container>
-                    <Row style={{ padding: 10 }}>
-                      <canvas id="base" height="200" />
-                    </Row>
-                  </Container>
-                </CardText>
-              </CardBody>
-            </Card>
+            <Canvas />
           </Col>
           <Col>
             <ControlBoard

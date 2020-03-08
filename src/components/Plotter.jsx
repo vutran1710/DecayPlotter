@@ -1,6 +1,6 @@
 import { Component } from 'inferno'
 import numeral from 'numeral'
-import Chart from 'chart.js'
+import Chart from 'apexcharts'
 import * as F from '../Functions'
 import {
   Row,
@@ -14,7 +14,7 @@ import Canvas from './Canvas'
 const ORIGINAL_STATE = {
   S0: 10000,
   x: 0,
-  D: 1.001,
+  D: 1.08,
 }
 
 
@@ -27,42 +27,27 @@ export default class Plotter extends Component {
     disabled: false,
     values: [],
     items: [],
+    counter: 0,
   }
 
   componentDidMount() {
     const ctx = document.getElementById("base");
-    const data = {
-      labels: [],
-      datasets: [
-        {
-          label: "f(x) = x",
-          borderColor: "rgba(75, 192, 192, 1)",
-          data: [],
-          fill: false
-        },
-      ]
-    }
 
     this.CHART = new Chart(ctx, {
-      type: 'line',
-      data: data,
-      options: {
-        animation: false,
-        scales: {
-          yAxes: [{
-            ticks: {
-              maxTicksLimit: 10,
-              beginAtZero:true
-            }
-          }],
-          xAxes: [{
-            ticks: {
-              callback: (value, index, values) => numeral(value).format('0')
-            }
-          }],
-        }
+      chart: {
+        type: 'line',
+      },
+      series: [],
+      xaxis: {
+        min: 0,
+        max: 200,
+      },
+      yaxis: {
+        min: 0,
+        max: 12000,
       }
     })
+    this.CHART.render()
   }
 
   formatNumber = v => numeral(v).format('0,0')
@@ -70,25 +55,42 @@ export default class Plotter extends Component {
   modifyConfig = key => event => this.setState({ [key]: event.target.value })
 
   addItem = () => {
-    const items = this.state.items
-    items.push({
+    const newItem = {
       x: this.state.x,
       y: this.state.S0,
       r: 0,
-      id: Math.random().toString(36).substring(7),
+      id: this.state.counter + 1,
+    }
+
+    const items = [...this.state.items, newItem]
+
+    this.CHART.appendSeries({
+      name: newItem.id,
+      data: [{
+        x: this.state.x,
+        y: newItem.y
+      }],
     })
-    this.setState({ items })
+
+    this.setState({ items, counter: this.state.counter + 1 })
   }
 
   animate = () => {
     this.draw = setInterval(() => {
       const x = this.state.x + 1
+
       const items = this.state.items.map(item => ({
         x: item.x,
-        y: this.formatNumber(F.S1T(this.state.S0, x - item.x, this.state.D)),
+        y: Math.round(F.S1T(this.state.S0, x - item.x, this.state.D), 0),
         r: item.r,
         id: item.id,
       }))
+
+      const chartData = items.map(i => ({
+        data: [{x, y: i.y}]
+      }))
+
+      this.CHART.appendData(chartData)
 
       this.setState({ x, items })
     }, 500)

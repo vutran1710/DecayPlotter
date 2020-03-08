@@ -37,9 +37,11 @@ export default class RankingBoard extends Component {
       )
     }
 
+    const fixedItems = [...items]
+
     return (
       <div>
-        {items.sort((a,b) => a.y > b.y ? -1 : 1).map((item, idx) => (
+        {fixedItems.sort((a,b) => a.y > b.y ? -1 : 1).map((item, idx) => (
           <Card className={setBg(idx)}>
             <CardBody>
               <Row>

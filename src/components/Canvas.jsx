@@ -20,7 +20,7 @@ export default class Canvas extends Component {
           <CardText>
             <Container>
               <Row style={{ padding: 10 }}>
-                <canvas id="base" height="200" />
+                <div id="base" height="200" />
               </Row>
             </Container>
           </CardText>

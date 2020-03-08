@@ -14,7 +14,7 @@ import Canvas from './Canvas'
 const ORIGINAL_STATE = {
   S0: 10000,
   x: 0,
-  D: 1.08,
+  D: 1.05,
 }
 
 
@@ -92,7 +92,7 @@ export default class Plotter extends Component {
       this.CHART.appendData(chartData)
 
       this.setState({ x, items })
-    }, 500)
+    }, 100)
   }
 
   stopAnimate = () => {

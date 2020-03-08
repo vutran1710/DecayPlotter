@@ -44,9 +44,18 @@ export default class RankingBoard extends Component {
             <CardBody>
               <Row>
                 <Col><h4>#{idx}</h4></Col>
-                <Col>T0: {item.x}</Col>
-                <Col>Positive: {item.r}</Col>
-                <Col><b>Score: {item.y}</b></Col>
+                <Col>
+                  <div><b>T0:</b></div>
+                  <b>{item.x}</b>
+                </Col>
+                <Col>
+                  <div><b>Positive:</b></div>
+                  <b>{item.r}</b>
+                </Col>
+                <Col>
+                  <div><b>Score:</b></div>
+                  <b>{item.y}</b>
+                </Col>
                 <Col>
                   <button onClick={boost(item.id)} className="boost-btn">+</button>
                 </Col>

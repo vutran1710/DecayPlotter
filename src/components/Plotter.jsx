@@ -65,6 +65,8 @@ export default class Plotter extends Component {
     })
   }
 
+  formatNumber = v => numeral(v).format('0,0')
+
   modifyConfig = key => event => this.setState({ [key]: event.target.value })
 
   addItem = () => {
@@ -81,7 +83,14 @@ export default class Plotter extends Component {
   animate = () => {
     this.draw = setInterval(() => {
       const x = this.state.x + 1
-      this.setState({ x })
+      const items = this.state.items.map(item => ({
+        x: item.x,
+        y: this.formatNumber(F.S1T(this.state.S0, x - item.x, this.state.D)),
+        r: item.r,
+        id: item.id,
+      }))
+
+      this.setState({ x, items })
     }, 500)
   }
 

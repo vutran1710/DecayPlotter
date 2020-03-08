@@ -30,7 +30,7 @@ export default class Plotter extends Component {
   }
 
   componentDidMount() {
-    const ctx = document.getElementById("base");
+    const ctx = document.getElementById("base")
 
     this.CHART = new Chart(ctx, {
       chart: {

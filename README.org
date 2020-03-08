@@ -1,0 +1,20 @@
+#+OPTIONS: ^:nil
+#+TITLE: DecayPlotter
+#+DATE: <2018-07-31 Tue>
+#+AUTHOR: Vu Tran
+#+EMAIL: me@vutr.io`
+
+* Content                                                               :TOC:
+- [[#introduction][Introduction]]
+- [[#first][First]]
+
+* Introduction
+This app is a visual-demostration of different Ranking Algorimths based on Medium/Reddit's popular ranking
+algorimths. Entities are ranked using different formula(s) defined in `src/Function/index.js`
+
+* First
+For configuration of the Chart and algorimths, refer to `state` of `Plotter.jsx` component
+
+<p align="center">
+  <img src="/img/ss.png" width="700" style="margin-right:10px;border:solid 2px #ddd;padding:5px;"/>
+</p>

@@ -75,6 +75,7 @@ export default class Plotter extends Component {
   }
 
   animate = () => {
+    this.setState({ disabled: true })
     this.draw = setInterval(() => {
       const x = this.state.x + 1
 
@@ -98,6 +99,7 @@ export default class Plotter extends Component {
   stopAnimate = () => {
     window.clearInterval(this.draw)
     this.draw = undefined
+    this.setState({ disabled: false })
   }
 
   boost = itemId => () => {

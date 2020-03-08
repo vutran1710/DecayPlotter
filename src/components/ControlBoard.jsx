@@ -11,6 +11,7 @@ import {
   Input,
   Label,
   Button,
+  ButtonGroup,
 } from 'inferno-bootstrap'
 
 export default class ControlBoard extends Component {
@@ -59,6 +60,8 @@ export default class ControlBoard extends Component {
                     />
                   </FormGroup>
                 </Col>
+              </Row>
+              <Row>
                 <Col>
                   <FormGroup>
                     <Label htmlFor="steepness">Steepness (D)</Label>
@@ -77,38 +80,12 @@ export default class ControlBoard extends Component {
           <hr />
           <Row>
             <Col>
-              <Button
-                onClick={reset}
-                disabled={disabled}
-              >
-                Reset!
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                primary
-                onClick={formActions.animate}
-              >
-                Animate
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                primarya
-                onClick={formActions.stopAnimate}
-                color="danger"
-              >
-                Cancel
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                primarya
-                onClick={formActions.addItem}
-                color="primary"
-              >
-                Add Item
-              </Button>
+              <ButtonGroup vertical>
+                <Button size="lg" color="link" onClick={reset} disabled={disabled}>Reset</Button>
+                <Button size="lg" color="link" onClick={formActions.animate}>Animate</Button>
+                <Button size="lg" primary onClick={formActions.stopAnimate} color="link">Cancel</Button>
+                <Button size="lg" primary onClick={formActions.addItem} color="link">Add Item</Button>
+              </ButtonGroup>
             </Col>
           </Row>
         </CardBody>

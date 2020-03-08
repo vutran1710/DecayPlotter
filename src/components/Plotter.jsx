@@ -128,17 +128,17 @@ export default class Plotter extends Component {
       <div>
         <Header />
         <Row>
-          <Col>
+          <Col md="5">
             <Canvas />
           </Col>
-          <Col>
+          <Col md="2">
             <ControlBoard
               disabled={disabled}
               formValues={{x, D, S0}}
               formActions={{ modifyConfig, reset, animate, stopAnimate, addItem }}
             />
           </Col>
-          <Col>
+          <Col md="5">
             <RankingBoard items={items} boost={boost} />
           </Col>
         </Row>

@@ -76,7 +76,8 @@ export default class Plotter extends Component {
     items.push({
       x: this.state.x,
       y: this.state.S0,
-      r: 0
+      r: 0,
+      id: Math.random().toString(36).substring(7),
     })
     this.setState({ items })
   }
@@ -85,12 +86,19 @@ export default class Plotter extends Component {
     this.draw = setInterval(() => {
       const x = this.state.x + 1
       this.setState({ x })
-    }, 200)
+    }, 500)
   }
 
   stopAnimate = () => {
     window.clearInterval(this.draw)
     this.draw = undefined
+  }
+
+  boost = itemId => () => {
+    const items = this.state.items
+    const index = items.findIndex(item => item.id === itemId)
+    items[index].r = items[index].r + 1
+    this.setState({ items })
   }
 
   render() {
@@ -108,6 +116,7 @@ export default class Plotter extends Component {
       animate,
       stopAnimate,
       addItem,
+      boost,
     } = this
 
     return (
@@ -136,7 +145,7 @@ export default class Plotter extends Component {
             />
           </Col>
           <Col>
-            <RankingBoard items={items} />
+            <RankingBoard items={items} boost={boost} />
           </Col>
         </Row>
       </div>

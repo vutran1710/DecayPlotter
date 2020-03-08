@@ -14,19 +14,15 @@ const setBg = idx => cx(
   'mb2',
   'p1',
   {
-    'bg-primary': idx === 0,
-    'bg-warning': idx === 1,
-    'bg-info': idx === 2,
-    'bg-danger': idx === 3,
-    'bg-basic': idx === 4,
-    'bg-dark': idx > 4,
+    'bg-danger': idx % 2 !== 0,
+    'bg-dark': idx % 2 === 0,
   }
 )
 
 export default class RankingBoard extends Component {
 
   render() {
-    const { items } = this.props
+    const { items, boost } = this.props
 
     if (!items || items.length === 0) {
       return (
@@ -51,6 +47,9 @@ export default class RankingBoard extends Component {
                 <Col>T0: {item.x}</Col>
                 <Col>Positive: {item.r}</Col>
                 <Col><b>Score: {item.y}</b></Col>
+                <Col>
+                  <button onClick={boost(item.id)} className="boost-btn">+</button>
+                </Col>
               </Row>
             </CardBody>
           </Card>

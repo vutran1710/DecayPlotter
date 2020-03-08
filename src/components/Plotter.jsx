@@ -27,7 +27,6 @@ export default class Plotter extends Component {
     disabled: false,
     values: [],
     items: [],
-    counter: 0,
   }
 
   componentDidMount() {
@@ -59,7 +58,7 @@ export default class Plotter extends Component {
       x: this.state.x,
       y: this.state.S0,
       r: 0,
-      id: this.state.counter + 1,
+      id: Math.random().toString(36).substr(3, 5),
     }
 
     const items = [...this.state.items, newItem]
@@ -72,7 +71,7 @@ export default class Plotter extends Component {
       }],
     })
 
-    this.setState({ items, counter: this.state.counter + 1 })
+    this.setState({ items })
   }
 
   animate = () => {

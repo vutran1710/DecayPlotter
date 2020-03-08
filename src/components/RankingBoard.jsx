@@ -45,7 +45,7 @@ export default class RankingBoard extends Component {
           <Card className={setBg(idx)}>
             <CardBody>
               <Row>
-                <Col><h4>#{idx}</h4></Col>
+                <Col><h4>#{item.id}</h4></Col>
                 <Col>
                   <div><b>T0:</b></div>
                   <b>{item.x}</b>

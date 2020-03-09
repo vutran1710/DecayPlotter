@@ -18,6 +18,7 @@ const ORIGINAL_STATE = {
 export default class Plotter extends Component {
   CHART = undefined
   draw = undefined
+  F = F.formula
 
   state = {
     ...ORIGINAL_STATE,
@@ -76,9 +77,14 @@ export default class Plotter extends Component {
     this.draw = setInterval(() => {
       const x = this.state.x + 1
 
+      const {
+        S0,
+        D: steepness,
+      } = this.state
+      const Smax = S0 * 1.2
       const items = this.state.items.map(item => ({
         x: item.x,
-        y: Math.round(F.S1T(this.state.S0, x - item.x, this.state.D), 0),
+        y: Math.round(this.F(S0, x - item.x, item.r, steepness, Smax, 5), 1),
         r: item.r,
         id: item.id,
       }))
@@ -90,7 +96,7 @@ export default class Plotter extends Component {
       this.CHART.appendData(chartData)
 
       this.setState({ x, items })
-    }, 100)
+    }, 300)
   }
 
   stopAnimate = () => {
@@ -102,7 +108,7 @@ export default class Plotter extends Component {
   boost = itemId => () => {
     const items = this.state.items
     const index = items.findIndex(item => item.id === itemId)
-    items[index].r = items[index].r + 1
+    items[index].r = items[index].r + 2
     this.setState({ items })
   }
 

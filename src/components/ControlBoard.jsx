@@ -75,6 +75,20 @@ export default class ControlBoard extends Component {
                   </FormGroup>
                 </Col>
               </Row>
+              <Row>
+                <Col>
+                  <FormGroup>
+                    <Label htmlFor="steepness">Animation Speed(ms)</Label>
+                    <Input
+                      type="number"
+                      name="animationSpeed"
+                      value={formValues.animationSpeed}
+                      onInput={formActions.modifyConfig('animationSpeed')}
+                      disabled={disabled}
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
             </Container>
           </Form>
           <hr />

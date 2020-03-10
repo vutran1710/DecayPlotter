@@ -11,7 +11,7 @@ import Canvas from './Canvas'
 const ORIGINAL_STATE = {
   S0: 10000,
   x: 0,
-  D: 1.05,
+  D: 1.005,
 }
 
 
@@ -25,6 +25,8 @@ export default class Plotter extends Component {
     disabled: false,
     values: [],
     items: [],
+    animationSpeed: 200,
+    blockLength: 2.5,
   }
 
   componentDidMount() {
@@ -37,7 +39,7 @@ export default class Plotter extends Component {
       series: [],
       xaxis: {
         min: 0,
-        max: 200,
+        max: 1000,
       },
       yaxis: {
         min: 0,
@@ -80,11 +82,12 @@ export default class Plotter extends Component {
       const {
         S0,
         D: steepness,
+        blockLength,
       } = this.state
       const Smax = S0 * 1.2
       const items = this.state.items.map(item => ({
         x: item.x,
-        y: Math.round(this.F(S0, x - item.x, item.r, steepness, Smax, 5), 1),
+        y: Math.round(this.F(S0, x - item.x, item.r, steepness, Smax, blockLength), 1),
         r: item.r,
         id: item.id,
       }))
@@ -96,7 +99,7 @@ export default class Plotter extends Component {
       this.CHART.appendData(chartData)
 
       this.setState({ x, items })
-    }, 300)
+    }, this.state.animationSpeed)
   }
 
   stopAnimate = () => {
@@ -119,6 +122,7 @@ export default class Plotter extends Component {
       S0,
       disabled,
       items,
+      animationSpeed,
     } = this.state
 
     const {
@@ -140,7 +144,7 @@ export default class Plotter extends Component {
           <Col md="2">
             <ControlBoard
               disabled={disabled}
-              formValues={{x, D, S0}}
+              formValues={{x, D, S0, animationSpeed}}
               formActions={{ modifyConfig, reset, animate, stopAnimate, addItem }}
             />
           </Col>

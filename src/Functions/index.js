@@ -5,7 +5,7 @@ export const decay = (origin, time, half_time) => {
   let decay_constant = 0.693 / half_time
   let powerlevel = -decay_constant * time
   let rem = origin * Math.pow(Math.E, powerlevel)
-  return rem;
+  return rem
 }
 
 export const score_calc = (origin, r, t, half_time) => {
@@ -25,7 +25,7 @@ export const adjust_effective_R = (R, blockCount) => {
   // Accumulative R minus the required Rt
   /* const required_factor = 1.1
    * return Math.pow(blockCount, -R) */
-  return decay(R, blockCount, 70)
+  return decay(R, blockCount/2, 70)
 }
 
 export const formula = (S0, t, R, steepness, Smax, blockLength) => {
@@ -36,6 +36,6 @@ export const formula = (S0, t, R, steepness, Smax, blockLength) => {
   const upperBound = Smax - N
   const effectiveR = adjust_effective_R(R, blockCount)
 
-  const P = S2T(upperBound, effectiveR, inflectionPoint, steepness + blockCount * 0.01)
+  const P = S2T(upperBound, effectiveR, inflectionPoint, steepness + blockCount * 0.005)
   return N + P
 }

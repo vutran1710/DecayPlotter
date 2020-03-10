@@ -25,8 +25,8 @@ export default class Plotter extends Component {
     disabled: false,
     values: [],
     items: [],
-    animationSpeed: 200,
-    blockLength: 2.5,
+    animationSpeed: 80,
+    blockLength: 2,
   }
 
   componentDidMount() {

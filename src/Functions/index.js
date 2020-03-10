@@ -23,18 +23,19 @@ export const S2T = (upperBound, x, inflectionPoint, steepness) => {
 
 export const adjust_effective_R = (R, blockCount) => {
   // Accumulative R minus the required Rt
-  const required_factor = 2
-  return R - required_factor * blockCount
+  /* const required_factor = 1.1
+   * return Math.pow(blockCount, -R) */
+  return decay(R, blockCount, 70)
 }
 
 export const formula = (S0, t, R, steepness, Smax, blockLength) => {
   const N = S1T(S0, t, steepness)
 
   const blockCount = t / blockLength
-  const inflectionPoint = 10 / blockCount
+  const inflectionPoint = 24
   const upperBound = Smax - N
   const effectiveR = adjust_effective_R(R, blockCount)
 
-  const P = S2T(upperBound, effectiveR, inflectionPoint, steepness)
+  const P = S2T(upperBound, effectiveR, inflectionPoint, steepness + blockCount * 0.01)
   return N + P
 }

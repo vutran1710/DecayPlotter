@@ -43,7 +43,7 @@ export default class Plotter extends Component {
       },
       yaxis: {
         min: 0,
-        max: 12000,
+        max: 11000,
       }
     })
     this.CHART.render()
@@ -84,7 +84,7 @@ export default class Plotter extends Component {
         D: steepness,
         blockLength,
       } = this.state
-      const Smax = S0 * 1.2
+      const Smax = S0 * 1.1
       const items = this.state.items.map(item => ({
         x: item.x,
         y: Math.round(this.F(S0, x - item.x, item.r, steepness, Smax, blockLength), 1),
